@@ -1,6 +1,6 @@
 <?php
-header("Content-Type:application/xls");
-header("Content-Disposition: attchment; filename=archivo.xls")
+header("Content-Type:application/xlsx");
+header("Content-Disposition: attchment; filename=archivo.xlsx")
 
 
 ?>

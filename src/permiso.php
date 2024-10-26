@@ -2,22 +2,25 @@
 session_start();
 include "../conexion.php";
 
+// Use prepared statements to prevent SQL injection
 $id_user = $_SESSION['idUser'];
 $permiso = "permiso";
-$sql = mysqli_query($conexion, "SELECT p.*, d.* FROM permisos p INNER JOIN detalle_permisos d ON p.id = d.id_permiso WHERE d.id_usuario = $id_user AND p.nombre = '$permiso'");
-$existe = mysqli_fetch_all($sql);
+$sql = mysqli_prepare($conexion, "SELECT p.*, d.* FROM permisos p INNER JOIN detalle_permisos d ON p.id = d.id_permiso WHERE d.id_usuario = ? AND p.nombre = ?");
+mysqli_stmt_bind_param($sql, "is", $id_user, $permiso);
+mysqli_stmt_execute($sql);
+$result = mysqli_stmt_get_result($sql);
+$existe = mysqli_fetch_all($result, MYSQLI_ASSOC);
 if (empty($existe) && $id_user != 1) {
     header('Location: permisos.php');
     exit();
-    
 }
-
 
 $alert = "";
 
-// Procesamos el formulario de entrada
-if (!empty($_POST)) {
-    if (empty($_POST['nombre']) || empty($_POST['direccion']) || empty($_POST['telefono']) || empty($_POST['correo'])) {
+// Process the form submission
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    $nombre = trim($_POST['nombre']);
+    if (empty($nombre)) {
         $alert = '<div class="alert alert-warning alert-dismissible fade show" role="alert">
                     Todos los campos son obligatorios
                     <button type="button" class="close" data-dismiss="alert" aria-label="Close">
@@ -25,26 +28,26 @@ if (!empty($_POST)) {
                     </button>
                 </div>';
     } else {
-        $nombre = $_POST['nombre'];
-       
+        // Check if the permission already exists
+        $query = mysqli_prepare($conexion, "SELECT * FROM permisos WHERE nombre = ?");
+        mysqli_stmt_bind_param($query, "s", $nombre);
+        mysqli_stmt_execute($query);
+        $result = mysqli_stmt_get_result($query);
 
-        // Verificamos si el cliente ya existe
-        $query = mysqli_query($conexion, "SELECT * FROM permisos WHERE nombre = '$nombre'");
-        $result = mysqli_fetch_array($query);
-        
-        if ($result > 0) {
+        if (mysqli_num_rows($result) > 0) {
             $alert = '<div class="alert alert-warning alert-dismissible fade show" role="alert">
-                        El cliente ya existe
+                        El permiso ya existe
                         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>';
         } else {
-            // Insertamos el nuevo cliente
-            $query_insert = mysqli_query($conexion, "INSERT INTO permisos(nombre) VALUES ('$nombre')");
-            if ($query_insert) {
+            // Insert the new permission
+            $query_insert = mysqli_prepare($conexion, "INSERT INTO permisos(nombre) VALUES (?)");
+            mysqli_stmt_bind_param($query_insert, "s", $nombre);
+            if (mysqli_stmt_execute($query_insert)) {
                 $alert = '<div class="alert alert-success alert-dismissible fade show" role="alert">
-                            Cliente registrado
+                            Permiso registrado
                             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
@@ -61,7 +64,7 @@ if (!empty($_POST)) {
     }
 }
 
-// Cerrar la conexión al finalizar
+// Close the connection at the end
 mysqli_close($conexion);
 
 include_once "includes/header.php";
@@ -79,7 +82,8 @@ include_once "includes/header.php";
                                 <label for="nombre" class="text-dark font-weight-bold">Nombre</label>
                                 <input type="text" placeholder="Ingrese Nombre" name="nombre" id="nombre" class="form-control" required>
                             </div>
-                            <div class="col-md-5 mt-3">
+                        </div>
+                        <div class="col-md-5 mt-3">
                             <input type="submit" value="Registrar" class="btn btn-primary" id="btnAccion">
                             <input type="button" value="Nuevo" class="btn btn-success" id="btnNuevo" onclick="limpiar()">
                         </div>
@@ -90,25 +94,20 @@ include_once "includes/header.php";
                 <div class="table-responsive">
                     <table class="table table-striped table-bordered" id="tbl">
                         <thead class="thead-dark">
-
-
-                        <?php
-
-                        // Mostrar el mensaje de actualización si existe
-if (isset($_SESSION['message'])) {
-    echo '<div class="alert alert-info alert-dismissible fade show" role="alert">' . $_SESSION['message'] . '
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
-          </div>';
-    unset($_SESSION['message']); // Limpiar el mensaje de la sesión
-}
-
-                        ?>
+                            <?php
+                            // Display the update message if it exists
+                            if (isset($_SESSION['message'])) {
+                                echo '<div class="alert alert-info alert-dismissible fade show" role="alert">' . $_SESSION['message'] . '
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                  </div>';
+                                unset($_SESSION['message']); // Clear the session message
+                            }
+                            ?>
                             <tr>
                                 <th>Id</th>
                                 <th>Nombre permiso</th>
-                               
                                 <th></th>
                             </tr>
                         </thead>
@@ -116,22 +115,18 @@ if (isset($_SESSION['message'])) {
                             <?php
                             include "../conexion.php";
                             $query = mysqli_query($conexion, "SELECT * FROM permisos");
-                            $result = mysqli_num_rows($query);
-                            if ($result > 0) {
-                                while ($data = mysqli_fetch_assoc($query)) { ?>
-                                    <tr>
-                                        <td><?php echo $data['id']; ?></td>
-                                        <td><?php echo $data['nombre']; ?></td>
-                                       
-                                        <td>
-                                            <a href="editar_permiso.php?id=<?php echo $data['id']; ?>" class="btn btn-primary"><i class='fas fa-edit'></i></a>
-                                            <form action="eliminar_permiso.php?id=<?php echo $data['id']; ?>" method="post" class="d-inline confirmar">
-                                                <button class="btn btn-danger" type="submit"><i class='fas fa-trash-alt'></i></button>
-                                            </form>
-                                        </td>
-                                    </tr>
-                            <?php }
-                            } ?>
+                            while ($data = mysqli_fetch_assoc($query)) { ?>
+                                <tr>
+                                    <td><?php echo $data['id']; ?></td>
+                                    <td><?php echo $data['nombre']; ?></td>
+                                    <td>
+                                        <a href="editar_permiso.php?id=<?php echo $data['id']; ?>" class="btn btn-primary"><i class='fas fa-edit'></i></a>
+                                        <form action="eliminar_permiso.php?id=<?php echo $data['id']; ?>" method="post" class="d-inline confirmar">
+                                            <button class="btn btn-danger" type="submit"><i class='fas fa-trash-alt'></i></button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            <?php } ?>
                         </tbody>
                     </table>
                 </div>
