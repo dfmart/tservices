@@ -83,6 +83,8 @@ if (!empty($_POST)) {
 }
 include "includes/header.php";
 ?>
+
+
 <div class="card">
     <div class="card-body">
         <form action="" method="post" autocomplete="off" id="formulario">
@@ -159,3 +161,5 @@ include "includes/header.php";
     </table>
 </div>
 <?php include_once "includes/footer.php"; ?>
+<!-- Bootstrap CSS -->
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">

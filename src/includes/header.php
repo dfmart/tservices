@@ -54,27 +54,27 @@ if (empty($_SESSION['active'])) {
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link d-flex" href="inventario_escritorio.php">
+                                <a class="nav-link d-flex" href="registro_escritorio.php">
                                     <i class="fas fa-desktop mr-2 fa-2x"></i>
-                                    <p>Inventario Escritorio</p>
+                                    <p>Escritorio</p>
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link d-flex" href="inventario_portatil.php">
+                                <a class="nav-link d-flex" href="registro_portatil.php">
                                     <i class="fas fa-laptop mr-2 fa-2x"></i>
-                                    <p>Inventario Portátil</p>
+                                    <p>Portátil</p>
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link d-flex" href="inventario_monitor.php">
+                                <a class="nav-link d-flex" href="registro_monitor.php">
                                     <i class="fas fa-tv mr-2 fa-2x"></i>
-                                    <p>Inventario Monitor</p>
+                                    <p>Monitor</p>
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link d-flex" href="inventario_servidor.php">
+                                <a class="nav-link d-flex" href="registro_servidor.php">
                                     <i class="fas fa-server mr-2 fa-2x"></i>
-                                    <p>Inventario Servidor</p>
+                                    <p>Servidor</p>
                                 </a>
                             </li>
                         </ul>
@@ -141,7 +141,7 @@ if (empty($_SESSION['active'])) {
             </p>
         </a>
         <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownProfile">
-            <a class="dropdown-item" href="#" data-toggle="modal" data-target="#nuevo_pass">Perfil</a>
+            <a class="dropdown-item" href="#" data-toggle="modal" data-target="#nuevo_pass">Restablecer Password</a>
             <div class="dropdown-divider"></div>
             <a class="dropdown-item" href="salir.php">Cerrar Sesión</a>
         </div>

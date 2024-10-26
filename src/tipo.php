@@ -10,3 +10,5 @@ if (empty($existe) && $id_user != 1) {
 }
 include_once "includes/header.php";
 ?>
+<!-- Bootstrap CSS -->
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">

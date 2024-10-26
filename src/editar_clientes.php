@@ -75,7 +75,7 @@ include_once "includes/header.php";
                                 <input type="text" placeholder="Ingrese Nombre" name="nombre" id="nombre" class="form-control" value="<?php echo isset($data['nombre']) ? $data['nombre'] : ''; ?>" required>
                             </div>
                         </div>
-                        <div class="col-md-2">
+                        <div class="col-md-3">
                             <div class="form-group">
                                 <label for="direccion" class="text-dark font-weight-bold">Dirección</label>
                                 <input type="text" placeholder="Ingrese Dirección" name="direccion" id="direccion" class="form-control" value="<?php echo isset($data['direccion']) ? $data['direccion'] : ''; ?>" required>
@@ -88,7 +88,7 @@ include_once "includes/header.php";
                                 <input type="hidden" name="id" id="id" value="<?php echo isset($data['id']) ? $data['id'] : ''; ?>">
                             </div>
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-md-3">
                             <div class="form-group">
                                 <label for="correo" class="text-dark font-weight-bold">Correo</label>
                                 <input type="email" placeholder="Ingrese Correo" name="correo" id="correo" class="form-control" value="<?php echo isset($data['correo']) ? $data['correo'] : ''; ?>" required>
@@ -97,7 +97,6 @@ include_once "includes/header.php";
                         
                         <div class="col-md-5 mt-3">
                             <input type="submit" value="Actualizar" class="btn btn-primary" id="btnAccion">
-                            <input type="button" value="Nuevo" class="btn btn-success" id="btnNuevo" onclick="limpiar()">
                             <a href="clientes.php" class="btn btn-danger">Atrás</a>
                         </div>
                     </div>
@@ -108,4 +107,6 @@ include_once "includes/header.php";
 </div>
 
 <?php include_once "includes/footer.php"; ?>
+<!-- Bootstrap CSS -->
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 

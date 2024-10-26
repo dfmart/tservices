@@ -104,7 +104,7 @@ include_once "includes/header.php";
                                 </select>
                             </div>
                         </div>
-                        <div class="col-md-2">
+                        <div class="col-md-3">
                             <div class="form-group">
                                 <label for="placa" class="text-dark font-weight-bold">Placa</label>
                                 <input type="text" placeholder="Ingrese placa" name="placa" id="placa" class="form-control" value="<?php echo $data['placa']; ?>" required>
@@ -116,7 +116,7 @@ include_once "includes/header.php";
                                 <input type="text" placeholder="Ingrese serial" name="serial" id="serial" class="form-control" value="<?php echo $data['serial']; ?>">
                             </div>
                         </div>
-                        <div class="col-md-2">
+                        <div class="col-md-3">
                             <div class="form-group">
                                 <label for="proveedor" class="text-dark font-weight-bold">Proveedor</label>
                                 <select name="proveedor" id="proveedor" class="form-control" required>
@@ -130,7 +130,7 @@ include_once "includes/header.php";
                     </div>
 
                     <div class="row">
-                        <div class="col-md-2">
+                        <div class="col-md-3">
                             <div class="form-group">
                                 <label for="marca" class="text-dark font-weight-bold">Marca</label>
                                 <input type="text" placeholder="Ingrese marca" name="marca" id="marca" class="form-control" value="<?php echo $data['marca']; ?>">
@@ -142,13 +142,13 @@ include_once "includes/header.php";
                                 <input type="text" placeholder="Ingrese modelo" name="modelo" id="modelo" class="form-control" value="<?php echo $data['modelo']; ?>">
                             </div>
                         </div>
-                        <div class="col-md-2">
+                        <div class="col-md-3">
                             <div class="form-group">
                                 <label for="especificacion" class="text-dark font-weight-bold">Especificación</label>
                                 <input type="text" placeholder="Ingrese especificación" name="especificacion" id="especificacion" class="form-control" value="<?php echo $data['especificacion']; ?>">
                             </div>
                         </div>
-                        <div class="col-md-2">
+                        <div class="col-md-3">
                             <div class="form-group">
                                 <label for="estado" class="text-dark font-weight-bold">Estado</label>
                                 <select name="estado" id="estado" class="form-control" required>
@@ -162,7 +162,7 @@ include_once "includes/header.php";
                     </div>
 
                     <div class="row">
-                        <div class="col-md-2">
+                        <div class="col-md-3">
                             <div class="form-group">
                                 <label for="cliente" class="text-dark font-weight-bold">Cliente</label>
                                 <select name="cliente" id="cliente" class="form-control" required>
@@ -179,7 +179,7 @@ include_once "includes/header.php";
                                 <input type="text" placeholder="Ingrese descripción" name="descripcion" id="descripcion" class="form-control" value="<?php echo $data['descripcion']; ?>">
                             </div>
                         </div>
-                        <div class="col-md-2">
+                        <div class="col-md-3">
                             <div class="form-group">
                                 <label for="tecnico" class="text-dark font-weight-bold">Técnico</label>
                                 <select name="tecnico" id="tecnico" class="form-control" required>
@@ -193,13 +193,13 @@ include_once "includes/header.php";
                     </div>
 
                     <div class="row">
-                        <div class="col-md-2">
+                        <div class="col-md-3">
                             <div class="form-group">
                                 <label for="fecha_ingreso" class="text-dark font-weight-bold">Fecha Ingreso</label>
                                 <input type="date" name="fecha_ingreso" id="fecha_ingreso" class="form-control" value="<?php echo $data['fecha_ingreso']; ?>" required>
                             </div>
                         </div>
-                        <div class="col-md-2">
+                        <div class="col-md-3">
                             <div class="form-group">
                                 <label for="fecha_salida" class="text-dark font-weight-bold">Fecha Salida</label>
                                 <input type="date" name="fecha_salida" id="fecha_salida" class="form-control" value="<?php echo $data['fecha_salida']; ?>" required>
@@ -218,3 +218,5 @@ include_once "includes/header.php";
 </div>
 
 <?php include_once "includes/footer.php"; ?>
+<!-- Bootstrap CSS -->
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">

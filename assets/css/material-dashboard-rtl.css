@@ -9,6 +9,10 @@
  * http://gonjeshk.ir
  *
  */
+ .modal-custom {
+  max-width: 800px; /* Ajusta este valor según tus necesidades */
+} 
+
 html[dir="rtl"] {
   text-align: right;
   direction: rtl;

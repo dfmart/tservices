@@ -12,28 +12,22 @@ header("Content-Disposition: attchment; filename=archivo.xls")
         <th>Direccion</th>
         <th>Nmero Telefono</th>
         <th>Correo</th>
-       
+        <th>Acciones</th>
     </tr>
 
     <?php
 
-session_start();
-require("../conexion.php");
+include("../conexion.php");
+$registros = $base->query("SELECT * FROM clientes")->fetchAll(PDO::FETCH_OBJ); 
+foreach ($registros as $persona) : ?>
+    <tr>
+        <td><?php echo htmlspecialchars($persona->id); ?></td>
+        <td><?php echo htmlspecialchars($persona->nombre); ?></td>
+        <td><?php echo htmlspecialchars($persona->direccion); ?></td>
+        <td><?php echo htmlspecialchars($persona->telefono); ?></td>
+        <td><?php echo htmlspecialchars($persona->correo); ?></td>
+        </td>
+    </tr>
+    <?php endforeach; ?>
+</table>
 
-$query = mysqli_query($conexion, "SELECT * FROM clientes");
-$result = mysqli_num_rows($query);
-if ($result > 0) {
-    while ($data = mysqli_fetch_assoc($query)) { ?>
-        <tr>
-       
-            <td><?php echo $data['id']; ?></td>
-            <td><?php echo $data['nombre']; ?></td>
-            <td><?php echo $data['direccion']; ?></td>
-            <td><?php echo $data['telefono']; ?></td>
-            <td><?php echo $data['correo']; ?></td>
-           
-                                        </td>
-                                    </tr>
-    </table>
-                            <?php }
-                            } ?>
