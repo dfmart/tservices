@@ -373,8 +373,8 @@ include_once "includes/header.php";
             <div class="col-md-12">
                 <?php echo (isset($alert)) ? $alert : ''; ?>
                 <div class="text-center mt-3">
-                    <a class="btn btn-primary" href="importar_portatiles.php"><i class="fas fa-file-upload"></i></a>
-                    <a class="btn btn-success" href="exportar_portatiles.php"><i class="fas fa-file-download"></i></a>
+                    <a class="btn btn-primary" href="importar_portatil.php"><i class="fas fa-file-upload"></i></a>
+                    <a class="btn btn-success" href="exportar_portatil.php"><i class="fas fa-file-download"></i></a>
                 </div>
 
                 <div class="col-md-12 mt-3">
@@ -417,6 +417,7 @@ include_once "includes/header.php";
                                 if ($result > 0) {
                                     while ($data = mysqli_fetch_assoc($query)) { ?>
                                         <tr>
+                                      
                                             <td><?php echo $data['id']; ?></td>
                                             <td><?php echo $data['placa']; ?></td>
                                             <td><?php echo $data['serial']; ?></td>
@@ -437,8 +438,8 @@ include_once "includes/header.php";
                                             <td><?php echo $data['fecha_ingreso']; ?></td>
                                             <td><?php echo $data['fecha_salida']; ?></td>
                                             <td>
-                                                <a href="editar_portatiles.php?id=<?php echo $data['id']; ?>" class="btn btn-primary"><i class='fas fa-edit'></i></a>
-                                                <form action="eliminar_portatiles.php?id=<?php echo $data['id']; ?>" method="post" class="d-inline confirmar">
+                                                <a href="editar_portatil.php?id=<?php echo $data['id']; ?>" class="btn btn-primary"><i class='fas fa-edit'></i></a>
+                                                <form action="eliminar_portatil.php?id=<?php echo $data['id']; ?>" method="post" class="d-inline confirmar">
                                                     <button class="btn btn-danger" type="submit"><i class='fas fa-trash-alt'></i></button>
                                                 </form>
                                             </td>

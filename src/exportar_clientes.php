@@ -1,7 +1,14 @@
 <?php
-header("Content-Type:application/xls");
-header("Content-Disposition: attchment; filename=archivo.xls")
+header("Content-Type: application/vnd.ms-excel; charset=UTF-8");
+header("Content-Disposition: attachment; filename=clientes.xls");
 
+// Añadir BOM para UTF-8
+echo "\xEF\xBB\xBF";
+
+include "../conexion.php";
+
+// Obtener los registros de clientes
+$query = $conexion->query("SELECT * FROM clientes");
 
 ?>
 
@@ -9,25 +16,22 @@ header("Content-Disposition: attchment; filename=archivo.xls")
     <tr>
         <th>Id</th>
         <th>Nombre de la empresa</th>
-        <th>Direccion</th>
-        <th>Nmero Telefono</th>
+        <th>Dirección</th>
+        <th>Número de Teléfono</th>
         <th>Correo</th>
-        <th>Acciones</th>
     </tr>
 
     <?php
-
-include("../conexion.php");
-$registros = $base->query("SELECT * FROM clientes")->fetchAll(PDO::FETCH_OBJ); 
-foreach ($registros as $persona) : ?>
-    <tr>
-        <td><?php echo htmlspecialchars($persona->id); ?></td>
-        <td><?php echo htmlspecialchars($persona->nombre); ?></td>
-        <td><?php echo htmlspecialchars($persona->direccion); ?></td>
-        <td><?php echo htmlspecialchars($persona->telefono); ?></td>
-        <td><?php echo htmlspecialchars($persona->correo); ?></td>
-        </td>
-    </tr>
-    <?php endforeach; ?>
+    // Verificar si hay resultados y recorrerlos
+    if ($query->num_rows > 0) {
+        while ($persona = $query->fetch_assoc()) { ?>
+            <tr>
+                <td><?php echo htmlspecialchars($persona['id'], ENT_QUOTES, 'UTF-8'); ?></td>
+                <td><?php echo htmlspecialchars($persona['nombre'], ENT_QUOTES, 'UTF-8'); ?></td>
+                <td><?php echo htmlspecialchars($persona['direccion'], ENT_QUOTES, 'UTF-8'); ?></td>
+                <td><?php echo htmlspecialchars($persona['telefono'], ENT_QUOTES, 'UTF-8'); ?></td>
+                <td><?php echo htmlspecialchars($persona['correo'], ENT_QUOTES, 'UTF-8'); ?></td>
+            </tr>
+        <?php }
+    } ?>
 </table>
-

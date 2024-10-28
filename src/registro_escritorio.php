@@ -33,34 +33,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $fecha_ingreso = mysqli_real_escape_string($conexion, $_POST['fecha_ingreso']);
     $fecha_salida = mysqli_real_escape_string($conexion, $_POST['fecha_salida']);
     
-    $imagePaths = [];
-    $imageErrors = [];
-
-    // Procesar imagen
-    foreach ($_FILES['imagenes']['tmp_name'] as $key => $tmp_name) {
-        if ($_FILES['imagenes']['error'][$key] === UPLOAD_ERR_OK) {
-            $imagen_nombre = $_FILES['imagenes']['name'][$key];
-            $imagen_tmp = $_FILES['imagenes']['tmp_name'][$key];
-            $ruta_imagen = __DIR__ . '/../uploads/' . basename($imagen_nombre);
-
-            if (move_uploaded_file($imagen_tmp, $ruta_imagen)) {
-                $imagePaths[] = $ruta_imagen;
-            } else {
-                $imageErrors[] = "Error al subir la imagen: $imagen_nombre.";
-            }
-        } else {
-            $imageErrors[] = "Error en el archivo: " . $_FILES['imagenes']['error'][$key];
-        }
-    }
-
-    if (!empty($imageErrors)) {
-        $alert .= '<div class="alert alert-danger">' . implode('<br>', $imageErrors) . '</div>';
-    }
-
     // Verificar si la placa ya existe
     $query = mysqli_query($conexion, "SELECT * FROM registro_escritorio WHERE placa = '$placa'");
     if (mysqli_num_rows($query) > 0) {
-        $alert = '<div class="alert alert-warning">La placa ya existe</div>';
+        $alert = '<div class="alert alert-warning alert-dismissible fade show" role="alert">
+            La placa ya existe
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>';
     } else {
         // Verificar si los IDs existen en sus respectivas tablas
         $proveedor_exists = mysqli_query($conexion, "SELECT * FROM proveedores WHERE id = '$proveedor'");
@@ -69,16 +50,31 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $tecnico_exists = mysqli_query($conexion, "SELECT * FROM tecnico WHERE id = '$tecnico'");
 
         if (mysqli_num_rows($proveedor_exists) == 0 || mysqli_num_rows($estado_exists) == 0 || mysqli_num_rows($cliente_exists) == 0 || mysqli_num_rows($tecnico_exists) == 0) {
-            $alert = '<div class="alert alert-danger">Uno o más IDs no existen en la base de datos.</div>';
+            $alert = '<div class="alert alert-danger alert-dismissible fade show" role="alert">
+                Uno o más IDs no existen en la base de datos.
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>';
         } else {
             // Insertar en la base de datos
-            $query_insert = mysqli_query($conexion, "INSERT INTO registro_escritorio (placa, serial, proveedor_id, marca, modelo, procesador, tipmemoria, tammemoria, nummodulo, tipdisco, tamano, bateria, nota, estado_id, cliente_id, tecnico_id, fecha_ingreso, fecha_salida, imagen) 
-                VALUES ('$placa', '$serial', '$proveedor', '$marca', '$modelo', '$procesador', '$tipmemoria', '$tammemoria', '$nummodulo', '$tipdisco', '$tamano', '$bateria', '$nota', '$estado', '$cliente', '$tecnico', '$fecha_ingreso', '$fecha_salida', '" . implode(',', $imagePaths) . "')");
+            $query_insert = mysqli_query($conexion, "INSERT INTO registro_escritorio (placa, serial, proveedor_id, marca, modelo, procesador, tipmemoria, tammemoria, nummodulo, tipdisco, tamano, bateria, nota, estado_id, cliente_id, tecnico_id, fecha_ingreso, fecha_salida) 
+                VALUES ('$placa', '$serial', '$proveedor', '$marca', '$modelo', '$procesador', '$tipmemoria', '$tammemoria', '$nummodulo', '$tipdisco', '$tamano', '$bateria', '$nota', '$estado', '$cliente', '$tecnico', '$fecha_ingreso', '$fecha_salida')");
 
             if ($query_insert) {
-                $alert = '<div class="alert alert-success">Registrado con éxito</div>';
+                $alert = '<div class="alert alert-success alert-dismissible fade show" role="alert">
+                    Registrado con éxito
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>';
             } else {
-                $alert = '<div class="alert alert-danger">Error al registrar: ' . mysqli_error($conexion) . '</div>';
+                $alert = '<div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    Error al registrar: ' . mysqli_error($conexion) . '
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>';
             }
         }
     }
@@ -96,17 +92,19 @@ mysqli_close($conexion);
 include_once "includes/header.php";
 ?>
 
+<!-- Botón para abrir el modal -->
 <div>
     <button class="btn btn-success" id="btnAgregar" data-toggle="modal" data-target="#exampleModal">
         Agregar <i class="fas fa-plus"></i>
     </button>
 </div>
 
+<!-- Modal -->
 <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document" style="max-width: 1000px;">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Agregar Registro Escritorio</h5>
+                <h5 class="modal-title" id="exampleModalLabel">Agregar Registro de Escritorio</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -123,7 +121,7 @@ include_once "includes/header.php";
                         <div class="col-md-3">
                             <div class="form-group">
                                 <label for="serial" class="text-dark font-weight-bold">Serial</label>
-                                <input type="text" placeholder="Ingrese serial" name="serial" id="serial" class="form-control">
+                                <input type="text" placeholder="Ingrese serial" name="serial" id="serial" class="form-control" required>
                             </div>
                         </div>
                         <div class="col-md-3">
@@ -144,7 +142,7 @@ include_once "includes/header.php";
                             </div>
                         </div>
                     </div>
-                    
+
                     <div class="row">
                         <div class="col-md-3">
                             <div class="form-group">
@@ -160,35 +158,64 @@ include_once "includes/header.php";
                         </div>
                         <div class="col-md-3">
                             <div class="form-group">
-                                <label for="tipmemoria" class="text-dark font-weight-bold">Tipo de Memoria</label>
-                                <input type="text" placeholder="Ingrese tipo de memoria" name="tipmemoria" id="tipmemoria" class="form-control">
+                                <label for="tipmemoria" class="text-dark font-weight-bold">Tipo Memoria</label>
+                                <select name="tipmemoria" id="tipmemoria" class="form-control" >
+                                    <option value="">Seleccione</option>
+                                    <option value="DDR3">DDR3</option>
+                                    <option value="DDR4">DDR4</option>
+                                    <option value="DDR5">DDR5</option>
+                                </select>
                             </div>
                         </div>
                         <div class="col-md-3">
                             <div class="form-group">
-                                <label for="tammemoria" class="text-dark font-weight-bold">Tamaño de Memoria</label>
-                                <input type="text" placeholder="Ingrese tamaño de memoria" name="tammemoria" id="tammemoria" class="form-control">
+                                <label for="tammemoria" class="text-dark font-weight-bold">Tamaño Memoria</label>
+                                <select name="tammemoria" id="tammemoria" class="form-control" >
+                                    <option value="">Seleccione</option>
+                                    <option value="4GB">4GB</option>
+                                    <option value="8GB">8GB</option>
+                                    <option value="16GB">16GB</option>
+                                    <option value="32GB">32GB</option>
+                                </select>
                             </div>
                         </div>
                     </div>
-
                     <div class="row">
                         <div class="col-md-3">
                             <div class="form-group">
-                                <label for="nummodulo" class="text-dark font-weight-bold">Número de Módulos</label>
-                                <input type="number" placeholder="Ingrese número de módulos" name="nummodulo" id="nummodulo" class="form-control">
+                                <label for="nummodulo" class="text-dark font-weight-bold">Número Módulo</label>
+                                <select name="nummodulo" id="nummodulo" class="form-control" >
+                                    <option value="">Seleccione</option>
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                    <option value="4">4</option>
+                                </select>
                             </div>
                         </div>
+                       
                         <div class="col-md-3">
                             <div class="form-group">
-                                <label for="tipdisco" class="text-dark font-weight-bold">Tipo de Disco</label>
-                                <input type="text" placeholder="Ingrese tipo de disco" name="tipdisco" id="tipdisco" class="form-control">
+                                <label for="tipdisco" class="text-dark font-weight-bold">Tipo Disco</label>
+                                <select name="tipdisco" id="tipdisco" class="form-control" >
+                                    <option value="">Seleccione</option>
+                                    <option value="HDD">HDD</option>
+                                    <option value="SSD">SSD</option>
+                                    <option value="Hybrid">Hybrid</option>
+                                </select>
                             </div>
                         </div>
+                        
                         <div class="col-md-3">
                             <div class="form-group">
                                 <label for="tamano" class="text-dark font-weight-bold">Tamaño</label>
-                                <input type="text" placeholder="Ingrese tamaño" name="tamano" id="tamano" class="form-control">
+                                <select name="tamano" id="tamano" class="form-control" >
+                                    <option value="">Seleccione</option>
+                                    <option value="256GB">256GB</option>
+                                    <option value="512GB">512GB</option>
+                                    <option value="1TB">1TB</option>
+                                    <option value="2TB">2TB</option>
+                                </select>
                             </div>
                         </div>
                         <div class="col-md-3">
@@ -220,7 +247,7 @@ include_once "includes/header.php";
                         <div class="col-md-3">
                             <div class="form-group">
                                 <label for="cliente" class="text-dark font-weight-bold">Cliente</label>
-                                <select name="cliente" id="cliente" class="form-control">
+                                <select name="cliente" id="cliente" class="form-control" required>
                                     <option value="">Seleccione</option>
                                     <?php while ($cliente = mysqli_fetch_assoc($clientes)) { ?>
                                         <option value="<?php echo $cliente['id']; ?>"><?php echo $cliente['nombre']; ?></option>
@@ -242,37 +269,124 @@ include_once "includes/header.php";
                     </div>
 
                     <div class="row">
-                        <div class="col-md-6">
+                        <div class="col-md-3">
                             <div class="form-group">
                                 <label for="fecha_ingreso" class="text-dark font-weight-bold">Fecha de Ingreso</label>
-                                <input type="date" name="fecha_ingreso" id="fecha_ingreso" class="form-control">
+                                <input type="date" name="fecha_ingreso" id="fecha_ingreso" class="form-control" required>
                             </div>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-3">
                             <div class="form-group">
                                 <label for="fecha_salida" class="text-dark font-weight-bold">Fecha de Salida</label>
                                 <input type="date" name="fecha_salida" id="fecha_salida" class="form-control">
                             </div>
                         </div>
                     </div>
-
-                    <div class="row">
-                        <div class="col-md-12">
-                            <div class="form-group">
-                                <label for="imagenes" class="text-dark font-weight-bold">Imágenes</label>
-                                <input type="file" name="imagenes[]" id="imagenes" class="form-control" multiple>
-                            </div>
-                        </div>
-                    </div>
-
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-                        <button type="submit" class="btn btn-primary">Registrar</button>
+                        <button type="submit" class="btn btn-primary">Guardar</button>
                     </div>
                 </form>
+                <?php echo (isset($alert)) ? $alert : ''; ?>
             </div>
         </div>
     </div>
 </div>
 
+<div class="card">
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-12">
+                <?php echo (isset($alert)) ? $alert : ''; ?>
+                <div class="text-center mt-3">
+                    <a class="btn btn-primary" href="importar_escritorio.php"><i class="fas fa-file-upload"></i></a>
+                    <a class="btn btn-success" href="exportar_escritorio.php"><i class="fas fa-file-download"></i></a>
+                </div>
+
+                <!-- Tabla para mostrar registros -->
+                <div class="col-md-12 mt-3">
+                    <div class="table-responsive">
+                        <table class="table table-striped table-bordered" id="tbl">
+                        <thead class="thead-dark">
+            <tr>
+                <th>Id</th>
+                <th>Placa</th>
+                <th>Serial</th>
+                <th>Proveedor</th>
+                <th>Marca</th>
+                <th>Modelo</th>
+                <th>Procesador</th>
+                <th>Tipo de Memoria</th>
+                <th>Tamaño de Memoria</th>
+                <th>Número de Módulo</th>
+                <th>Tipo de Disco</th>
+                <th>Tamaño</th>
+                <th>Batería</th>
+                <th>Nota</th>
+                <th>Estado</th>
+                <th>Cliente</th>
+                <th>Técnico</th>
+                <th>Fecha Ingreso</th>
+                <th>Fecha Salida</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php
+            include "../conexion.php";
+            $query = mysqli_query($conexion, "SELECT r.*, p.nombre as proveedor_nombre, e.nombre as estado_nombre, c.nombre as cliente_nombre, t.nombre as tecnico_nombre FROM registro_escritorio r
+            LEFT JOIN proveedores p ON r.proveedor_id = p.id
+            LEFT JOIN estado e ON r.estado_id = e.id
+            LEFT JOIN clientes c ON r.cliente_id = c.id
+            LEFT JOIN tecnico t ON r.tecnico_id = t.id");
+            while ($data = mysqli_fetch_assoc($query)) { ?>
+                <tr>
+                    <td><?php echo $data['id']; ?></td>
+                    <td><?php echo $data['placa']; ?></td>
+                    <td><?php echo $data['serial']; ?></td>
+                    <td><?php echo $data['proveedor_nombre']; ?></td>
+                    <td><?php echo $data['marca']; ?></td>
+                    <td><?php echo $data['modelo']; ?></td>
+                    <td><?php echo $data['procesador']; ?></td>
+                    <td><?php echo $data['tipmemoria']; ?></td>
+                    <td><?php echo $data['tammemoria']; ?></td>
+                    <td><?php echo $data['nummodulo']; ?></td>
+                    <td><?php echo $data['tipdisco']; ?></td>
+                    <td><?php echo $data['tamano']; ?></td>
+                    <td><?php echo $data['bateria']; ?></td>
+                    <td><?php echo $data['nota']; ?></td>
+                    <td><?php echo $data['estado_nombre']; ?></td>
+                    <td><?php echo $data['cliente_nombre']; ?></td>
+                    <td><?php echo $data['tecnico_nombre']; ?></td>
+                    <td><?php echo $data['fecha_ingreso']; ?></td>
+                    <td><?php echo $data['fecha_salida']; ?></td>
+                    <td>
+                    <a href="editar_escritorio.php?id=<?php echo $data['id']; ?>" class="btn btn-primary"><i class='fas fa-edit'></i></a>
+                                <form action="eliminar_escritorio.php?id=<?php echo $data['id']; ?>" method="post" class="d-inline confirmar">
+                                    <button class="btn btn-danger" type="submit"><i class='fas fa-trash-alt'></i></button>
+                                </form>
+                    </td>
+                </tr>
+            <?php } ?>
+        </tbody>
+    </table>
+</div>
+
 <?php include_once "includes/footer.php"; ?>
+
+<script>
+function editarRegistro(element) {
+    // Funcionalidad para editar registro
+}
+
+function eliminarRegistro(element) {
+    const id = element.getAttribute('data-id');
+    if (confirm('¿Estás seguro de que deseas eliminar este registro?')) {
+        // Función AJAX para eliminar
+        // ...
+    }
+}
+</script>
+<!-- Bootstrap CSS -->
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+

@@ -21,7 +21,7 @@ if (empty($_SESSION['active'])) {
 
 <body>
     <div class="wrapper">
-        <div class="sidebar" data-color="purple" data-background-color="blue" data-image="../assets/img/sidebar.jpg">
+        <div class="sidebar" data-color="Silver" data-background-color="blue" data-image="../assets/img/sidebar.jpg">
             <div class="logo bg-primary"><a href="./" class="simple-text logo-normal">
                     Sistemas Inventario
                 </a></div>
@@ -133,13 +133,14 @@ if (empty($_SESSION['active'])) {
                     <div class="collapse navbar-collapse justify-content-end">
 
 <ul class="navbar-nav">
-    <li class="nav-item dropdown">
+<li class="nav-item dropdown">
         <a class="nav-link" href="javascript:;" id="navbarDropdownProfile" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            <i class="fas fa-user"></i>
-            <p class="d-lg-none d-md-block">
+        <i class="fas fa-user" style="font-size: 2em;"></i>
+        <p class="d-lg-none d-md-block">
                 Cuenta
             </p>
         </a>
+        
         <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownProfile">
             <a class="dropdown-item" href="#" data-toggle="modal" data-target="#nuevo_pass">Restablecer Password</a>
             <div class="dropdown-divider"></div>
@@ -153,3 +154,4 @@ if (empty($_SESSION['active'])) {
 <!-- End Navbar -->
 <div class="content bg">
 <div class="container-fluid">
+

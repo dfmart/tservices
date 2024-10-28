@@ -1,7 +1,14 @@
 <?php
-header("Content-Type:application/xlsx");
-header("Content-Disposition: attchment; filename=archivo.xlsx")
+header("Content-Type: application/vnd.ms-excel; charset=UTF-8");
+header("Content-Disposition: attachment; filename=proveedores.xls");
 
+// Añadir BOM para UTF-8
+echo "\xEF\xBB\xBF";
+
+include "../conexion.php";
+
+// Obtener los registros de proveedores
+$query = $conexion->query("SELECT * FROM proveedores");
 
 ?>
 
@@ -9,31 +16,22 @@ header("Content-Disposition: attchment; filename=archivo.xlsx")
     <tr>
         <th>Id</th>
         <th>Nombre de la empresa</th>
-        <th>Direccion</th>
-        <th>Nmero Telefono</th>
+        <th>Dirección</th>
+        <th>Número Teléfono</th>
         <th>Correo</th>
-       
     </tr>
 
     <?php
-
-session_start();
-require("../conexion.php");
-
-$query = mysqli_query($conexion, "SELECT * FROM proveedores");
-$result = mysqli_num_rows($query);
-if ($result > 0) {
-    while ($data = mysqli_fetch_assoc($query)) { ?>
-        <tr>
-       
-            <td><?php echo $data['id']; ?></td>
-            <td><?php echo $data['nombre']; ?></td>
-            <td><?php echo $data['direccion']; ?></td>
-            <td><?php echo $data['telefono']; ?></td>
-            <td><?php echo $data['correo']; ?></td>
-           
-                                        </td>
-                                    </tr>
-    </table>
-                            <?php }
-                            } ?>
+    // Verificar si hay resultados y recorrerlos
+    if ($query->num_rows > 0) {
+        while ($persona = $query->fetch_assoc()) { ?>
+            <tr>
+                <td><?php echo htmlspecialchars($persona['id'], ENT_QUOTES, 'UTF-8'); ?></td>
+                <td><?php echo htmlspecialchars($persona['nombre'], ENT_QUOTES, 'UTF-8'); ?></td>
+                <td><?php echo htmlspecialchars($persona['direccion'], ENT_QUOTES, 'UTF-8'); ?></td>
+                <td><?php echo htmlspecialchars($persona['telefono'], ENT_QUOTES, 'UTF-8'); ?></td>
+                <td><?php echo htmlspecialchars($persona['correo'], ENT_QUOTES, 'UTF-8'); ?></td>
+            </tr>
+        <?php }
+    } ?>
+</table>

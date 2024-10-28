@@ -115,8 +115,8 @@ include_once "includes/header.php";
             <div class="col-md-12">
                 <?php echo (isset($alert)) ? $alert : ''; ?>
                 <div class="text-center mt-3">
-                    <a class="btn btn-primary" href="importar_clientes.php"><i class="fas fa-file-upload"></i></a>
-                    <a class="btn btn-success" href="exportar_clientes.php"><i class="fas fa-file-download"></i></a>
+                    <a class="btn btn-primary" href="importar_proveedores.php"><i class="fas fa-file-upload"></i></a>
+                    <a class="btn btn-success" href="exportar_proveedores.php"><i class="fas fa-file-download"></i></a>
                 </div>
 
                 <div class="col-md-12 mt-3">
